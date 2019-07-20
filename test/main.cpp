@@ -30,7 +30,6 @@ public:
 
 	Dialog()
 	{
-		//edit_.changed.addListener(this, OnEditChanged);	// vc7.1
 		edit_.changed.addListener(this, &Dialog::OnEditChanged);
 	}
 
@@ -73,13 +72,15 @@ void example2()
 {
 	Foo foo1;
 	// connect to a function object
-	SomeEvent::Connection c1(event1.addListener(foo1));
+	SomeEvent::Connection c1{ event1.addListener(foo1) };
 
 	SomeEvent::Connection c2;
 	// connect to an ordinary function
 	c2 = event1.addListener(bar);
 
-	//SomeEvent::Connection c3(c1);	// error: copy construction is not permitted
+	SomeEvent::Connection c3 = event1.addListener([](int a, int b) { cout << "lambda: " << a << '+' << b << '=' << a + b << endl; });
+
+	//SomeEvent::Connection c100(c1);	// error: copy construction is not permitted
 
 	//c1 = c2;	// error: assignment is not permitted
 
@@ -118,10 +119,6 @@ void example3()
 
 int main()
 {
-#ifdef _MSC_VER
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
-
 	example1();
 	example2();
 	example3();
